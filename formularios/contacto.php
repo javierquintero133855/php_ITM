@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <h1>Formulario de registro</h1>
+                <h1>Formulario de Contacto</h1>
                 <form action="?accion=registrar" method="post">
                     <div class="form-row">
                         <div class="form-group col-md-6">
