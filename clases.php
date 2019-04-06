@@ -6,6 +6,51 @@ Archivo para la creación de todas las clases de nuestro Web Site
 error_reporting(E_ERROR); //inactivar mensajes. En este caso, los WARNING
 
 // Clase para la comunicación con la Base de Datos (db)
+
+if(isset($_GET) && isset($_GET['login'])){
+    login();
+}
+
+
+
+function login(){
+    if(isset($_POST)){
+
+
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+
+
+        $query = new db();
+
+        $result = $query->db_sql("select * from usuarios where email  = '$email' AND password = '$password'");
+
+        if ($result) {
+            $response = ($result->num_rows > 0) ? $result->fetch_array(MYSQLI_ASSOC): "error";
+            if($response != "error"){
+                // llenar sesion y redirect a index.php
+                print_r("Bienvenido ".$response["nombre1"]." ".$response["apellido1"]);
+            }else{
+
+                // llenar sesion error con un mensaje
+                print_r("!!!Error usuario no encontrado");
+            }
+
+        } else {
+            print_r("else error");
+        }
+        die;
+    }
+}
+
+
+
+
+
+
+
+
 class db
 {
 
