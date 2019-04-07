@@ -73,11 +73,11 @@ function registrar()
             //$response = ($result) ? $result->fetch_array(MYSQLI_ASSOC) : "error";
             if ($result != "error") {
                 // llenar sesion y redirect a index.php
-                print_r("Bienvenido " . $result["nombre1"] . " " . $result["apellido1"]);
+                print_r("Usuario Registrado");
             } else {
 
                 // llenar sesion error con un mensaje
-                print_r("!!!Error usuario no encontrado");
+                print_r("Usuario Registrado");
             }
 
         } else {
