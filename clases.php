@@ -25,6 +25,7 @@ function login()
 
         $email = $_POST['email'];
         $password = $_POST['password'];
+        $mensaje = "";
 
 
         $query = new db();
@@ -35,11 +36,21 @@ function login()
             $response = ($result->num_rows > 0) ? $result->fetch_array(MYSQLI_ASSOC) : "error";
             if ($response != "error") {
                 // llenar sesion y redirect a index.php
-                print_r("Bienvenido " . $response["nombre1"] . " " . $response["apellido1"]);
+
+                $mensaje = "Bienvenido " . $response["nombre1"] . " " . $response["apellido1"];
+                $path = "http://localhost:81/2_actividad/index.php";
+                echo "<script type='text/javascript'>alert('$mensaje');</script>";
+                echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
+
+
             } else {
 
                 // llenar sesion error con un mensaje
-                print_r("!!!Error usuario no encontrado");
+
+                $mensaje = "!!!Error usuario no encontrado";
+                echo "<script type='text/javascript'>alert('$mensaje');</script>";
+                $path = "http://localhost:81/2_actividad/index.php?menu=registro";
+                echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
             }
 
         } else {
@@ -107,9 +118,9 @@ function contactar()
 
         $result = $query->db_sql("INSERT INTO contacto(email, nombre1, nombre2, apellido1, apellido2, ciudad, asunto, mensaje, fecha) VALUES ('$mail','$name1','$name2','$lastname1','$lastname2','$ciudad','$asunto','$mensage','$fecha')");
 
-        if ($result != "error"){
+        if ($result != "error") {
             print_r("ok");
-        }else{
+        } else {
             print_r("Error");
         }
         die;
