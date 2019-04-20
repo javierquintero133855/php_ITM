@@ -43,7 +43,7 @@ function login()
             }
 
         } else {
-            print_r("else error");
+            print_r("!!!Error");
         }
         die;
     }
