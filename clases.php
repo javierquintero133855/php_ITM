@@ -14,7 +14,7 @@ if (isset($_GET) && isset($_GET['registrar'])) {
     registrar();
 }
 
-if (isset($_GET) && ($_GET['contactar'])) {
+if (isset($_GET) && isset($_GET['contactar'])) {
     contactar();
 }
 
@@ -25,7 +25,6 @@ function login()
 
         $email = $_POST['email'];
         $password = $_POST['password'];
-        $mensaje = "";
 
 
         $query = new db();
@@ -81,18 +80,22 @@ function registrar()
         $result = $query->db_sql("INSERT INTO usuarios(email, password, nombre1, nombre2, apellido1, apellido2, rol, fecha_registro, estado, acceso, fecha) VALUES ('$mail','$pass','$name1','$name2','$lastname1','$lastname2','$rol','$fecha_reg','$state','$access','$fecha')");
 
         if ($result) {
-            //$response = ($result) ? $result->fetch_array(MYSQLI_ASSOC) : "error";
+
             if ($result != "error") {
                 // llenar sesion y redirect a index.php
                 print_r("Usuario Registrado");
             } else {
 
                 // llenar sesion error con un mensaje
-                print_r("Usuario Registrado");
+                print_r("else segundo if");
             }
 
         } else {
-            print_r("Usuario Registrado");
+            //print_r("else primer if");
+            $mensaje = "!Error faltan datos !";
+            $path = "http://localhost:81/2_actividad/index.php?menu=registro";
+            echo "<script type='text/javascript'>alert('$mensaje');</script>";
+            echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
         }
         die;
 
@@ -118,12 +121,26 @@ function contactar()
 
         $result = $query->db_sql("INSERT INTO contacto(email, nombre1, nombre2, apellido1, apellido2, ciudad, asunto, mensaje, fecha) VALUES ('$mail','$name1','$name2','$lastname1','$lastname2','$ciudad','$asunto','$mensage','$fecha')");
 
-        if ($result != "error") {
-            print_r("ok");
-        } else {
-            print_r("Error");
+        if ($result) {
+            //echo "result es true". $result;
+            if ($result >= 1) {
+                $mensaje = "su solicitud será procesada";
+                echo "<script type='text/javascript'>alert('$mensaje');</script>";
+                $path = "http://localhost:81/2_actividad/index.php?menu=contacto";
+                echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
+            } else {
+                $mensaje = "!!!Error";
+                echo "<script type='text/javascript'>alert('$mensaje');</script>";
+            }
+        }else{
+            //print_r("else primer if");
+            $mensaje = "!Error faltan datos !";
+            $path = "http://localhost:81/2_actividad/index.php?menu=registro";
+            echo "<script type='text/javascript'>alert('$mensaje');</script>";
+            echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
         }
-        die;
+       die;
+
     }
 
 }

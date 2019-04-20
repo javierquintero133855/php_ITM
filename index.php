@@ -25,7 +25,7 @@
             }else if ($_GET['menu']== 'ingreso') {
                 include('./formularios/login.php');
             }else if ($_GET['menu']== 'contacto') {
-                include('./formularios/contacto.php');
+                include('./formularios/contactar.php');
             }else if ($_GET['menu']== '' || $_GET['menu']== 'inicio') {
                 include('./capas/carrusel.php');
             }else if ($_GET['menu'] == 'equipo'){
