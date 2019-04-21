@@ -48,9 +48,16 @@
                         <textarea class="form-control" id="mensaje" name="mensaje" required></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Enviar</button>
-                </form>
+                    <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
 
+                </form>
+                <?php
+                include('solicitudesContacto.php');
+
+
+                ?>
             </div>
         </div>
     </div>
+
+
