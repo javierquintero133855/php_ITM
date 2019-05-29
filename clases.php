@@ -17,26 +17,41 @@ if (isset($_GET) && isset($_GET['registrar'])) {
 if (isset($_GET) && isset($_GET['contactar'])) {
     contactar();
 }
-
+if (isset($_GET) && isset($_GET['cambiopassword'])) {
+    cambiopassword();
+}
+if (isset($_GET) && isset($_GET['salir'])) {
+    salir();
+}
+if (isset($_GET) && isset($_GET['completar'])) {
+    completarregistro();
+}
+if (isset($_GET) && isset($_GET['recuperarpass'])) {
+    recuperarpass();
+}
 function login()
 {
     if (isset($_POST)) {
 
-
+        $fecha = date("Y-m-d H:i:s");
         $email = $_POST['email'];
         $password = $_POST['password'];
 
 
         $query = new db();
 
-        $result = $query->db_sql("select * from usuarios where email  = '$email' AND password = '$password'");
-
+        $result = $query->db_sql("select email from usuarios where email  = '$email' AND password = SHA1('$password')");
+        $res = $result;
         if ($result) {
+            $fila = $result->fetch_assoc();
+                 session_start();
+                 $_SESSION['usuario'] = $fila['email'];
             $response = ($result->num_rows > 0) ? $result->fetch_array(MYSQLI_ASSOC) : "error";
             if ($response != "error") {
                 // llenar sesion y redirect a index.php
-
-                $mensaje = "Bienvenido " . $response["nombre1"] . " " . $response["apellido1"];
+                $query->db_sql("update usuarios set acceso = '1', fecha='$fecha' where email  = '$email' AND password = '$password'");
+                $mensaje = "Bienvenido " . $_SESSION['usuario'];
+               // $mensaje = "Bienvenido " . $response["nombre1"] . " " . $response["apellido1"];
                 $path = "http://localhost:81/2_actividad/index.php";
                 echo "<script type='text/javascript'>alert('$mensaje');</script>";
                 echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
@@ -59,6 +74,148 @@ function login()
     }
 }
 
+//metodo cambio de contraseña
+function cambiopassword()
+{
+    if (isset($_POST)) {
+
+        session_start();
+        $email = $_SESSION['usuario'];
+         
+        $password = $_POST['password'];
+        
+        $newpass = $_POST['newpassword'];
+      
+
+        $query = new db();
+        $result = $query->db_sql("select * from usuarios where email  = '$email' AND password = '$password'");
+        if ($result) {
+            $response = ($result->num_rows > 0) ? $result->fetch_array(MYSQLI_ASSOC) : "error";
+            if ($response != "error") {
+                // llenar sesion y redirect a index.php
+              $query->db_sql("update usuarios set password = '$newpass' where email  = '$email' AND password = '$password'");
+
+                $mensaje = "Contraseña cambiada con éxito ";
+                $path = "http://localhost:81/2_actividad/index.php";
+                echo "<script type='text/javascript'>alert('$mensaje');</script>";
+                echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
+
+
+            } else {
+            // llenar sesion error con un mensaje
+
+                $mensaje = "!!!Error contraseña incorrecta";
+                echo "<script type='text/javascript'>alert('$mensaje');</script>";
+                $path = "http://localhost:81/2_actividad/index.php?menu=registro";
+                echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
+
+        } 
+        die;
+    }else{
+         print_r("!!!Error");
+    }
+}else{
+     print_r("!!!Error");
+}
+}
+
+//metodo para completar registro
+function completarregistro()
+{
+    if (isset($_POST)) {
+
+        session_start();
+        $email = $_SESSION['usuario'];
+        $edad = $_POST['edad'];
+        $sexo = $_POST['sexo'];
+        $profesion = $_POST['profesion'];
+      
+
+        $query = new db();
+        $result = $query->db_sql("select * from usuarios where email  = '$email'");
+        if ($result) {
+            $response = ($result->num_rows > 0) ? $result->fetch_array(MYSQLI_ASSOC) : "error";
+            if ($response != "error") {
+                // llenar sesion y redirect a index.php
+              $query->db_sql("update usuarios set edad = '$edad', sexo='$sexo', profesion='$profesion' where email  = '$email'");
+
+                $mensaje = "El registro ha sido completado exitosamente";
+                $path = "http://localhost:81/2_actividad/index.php";
+                echo "<script type='text/javascript'>alert('$mensaje');</script>";
+                echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
+
+
+            } else {
+            // llenar sesion error con un mensaje
+
+                $mensaje = "!!!Ha ocurrido un error al intentar completar en registro";
+                echo "<script type='text/javascript'>alert('$mensaje');</script>";
+                $path = "http://localhost:81/2_actividad/index.php?menu=registro";
+                echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
+
+        } 
+        die;
+    }else{
+         print_r("!!!Error");
+    }
+}else{
+     print_r("!!!Error");
+}
+}
+
+//metodo para recuperar contraseña
+function recuperarpass()
+{
+    if (isset($_POST)) {
+         
+        $email = $_POST['email'];
+
+        $query = new db();
+        $result = $query->db_sql("select password from usuarios where email  = '$email'");
+        if ($result) {
+            $fila = $result->fetch_assoc();
+               
+                 $pass = $fila['password'];
+            $response = ($result->num_rows > 0) ? $result->fetch_array(MYSQLI_ASSOC) : "error";
+            if ($response != "error") {
+                // llenar sesion y redirect a index.php
+             $to = $email;
+            $subject = "Recuperación de contraseña sitio web PHPStudents PPI620303";
+            $message = "Su clave es: ".$pass;
+            $headers = "From: PhpStudents " ;
+            $bool=mail($to, $subject, $message,$headers);
+                if($bool){
+                     $mensaje = "La contraseña ha sido enviada a su correo electronico ";
+                $path = "http://localhost:81/2_actividad/index.php";
+                echo "<script type='text/javascript'>alert('$mensaje');</script>";
+                echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
+                }else{
+                     $mensaje = "ha ocurrido un error al enviadar correo electronico ";
+                $path = "http://localhost:81/2_actividad/index.php";
+                echo "<script type='text/javascript'>alert('$mensaje');</script>";
+                echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
+                }
+               
+
+
+            } else {
+            // llenar sesion error con un mensaje
+
+                $mensaje = "!!!Error email no registrado";
+                echo "<script type='text/javascript'>alert('$mensaje');</script>";
+                $path = "http://localhost:81/2_actividad/index.php?menu=registro";
+                echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
+
+        } 
+        die;
+    }else{
+         print_r("!!!Error");
+    }
+}else{
+     print_r("!!!Error");
+}
+}
+
 // metodo para Registrar
 function registrar()
 {
@@ -77,18 +234,13 @@ function registrar()
 
         $query = new db();
 
-        $result = $query->db_sql("INSERT INTO usuarios(email, password, nombre1, nombre2, apellido1, apellido2, rol, fecha_registro, estado, acceso, fecha) VALUES ('$mail','$pass','$name1','$name2','$lastname1','$lastname2','$rol','$fecha_reg','$state','$access','$fecha')");
+        $result = $query->db_sql("INSERT INTO usuarios(email, password, nombre1, nombre2, apellido1, apellido2, rol, fecha_registro, estado, acceso, fecha) VALUES ('$mail', SHA1('$pass'),'$name1','$name2','$lastname1','$lastname2','$rol','$fecha_reg','$state','$access','$fecha')");
+        $response = ($result > 0) ? true : false;
 
-        if ($result) {
+        if ($response) {
 
-            if ($result != "error") {
-                // llenar sesion y redirect a index.php
-                print_r("Usuario Registrado");
-            } else {
+            print_r("Usuario Registrado");
 
-                // llenar sesion error con un mensaje
-                print_r("else segundo if");
-            }
 
         } else {
             //print_r("else primer if");
@@ -183,6 +335,14 @@ class db
         $this->db_close();
         //return $result_sql;
         return $this->result;
+    }
+
+    function salir(){
+        session_destroy();
+         $path = "http://localhost:81/2_actividad/index.php?menu=registro";
+            echo "<script type='text/javascript'>alert('$mensaje');</script>";
+            echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
+
     }
 
 

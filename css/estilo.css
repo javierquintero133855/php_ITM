@@ -1,4 +1,9 @@
-#footer{
+.footer{
     position: fixed;
-    bottom: 0px;
+    background-color: #1b1e21;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    text-align: center;
 }

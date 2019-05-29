@@ -12,6 +12,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Login</button>
+        <a  href="?menu=recuperarpass" >Recuperar contraseña</a>
     </form>
 </div>
 

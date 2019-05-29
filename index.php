@@ -1,3 +1,22 @@
+<?php 
+
+     session_start();
+
+     if(!empty($_POST['salir']))
+     {
+        include('clases.php');
+        $email = $_SESSION['usuario'];
+       $sql = new db();
+       $sql->db_sql("update usuarios set acceso = '0' where email  = '$email'");
+        $_SESSION['usuario'] = "";
+        session_destroy();?>
+        <script type='text/javascript'>alert('la Sesion ha sido cerrada, gracias por t� ingreso');</script>
+     <?php }
+
+
+
+
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -32,6 +51,12 @@
                     include ('./formularios/Equipo.php');
             }else if($_GET['menu'] == 'integrantes'){
                 include ('./formularios/Integrantes.php');
+            }else if($_GET['menu'] == 'cambiopass'){
+                include ('./formularios/cambiopass.php');
+            }else if($_GET['menu'] == 'completar'){
+                include ('./formularios/completar.php');
+            }else if($_GET['menu'] == 'recuperarpass'){
+                include ('./formularios/recuperarpass.php');
             }
         }else{
 
@@ -52,17 +77,24 @@ include('clases.php');
 $db = new db();
 ?>
 
+<form>
+    <div class="container">
+       <article>
+
+       </article>
+
+    </div>
+</form>
 
 
 
 
 
 
-
-<footer>
-    <?php
-    require_once ("capas/footer.php");
-    ?>
+<footer class="footer">
+    <div class="container">
+        <p class="text-muted credit" align="center">Curso de Programación Web con PHP (<a href="http://www.itm.edu.co/">ITM</a>. 2019-1)</p>
+    </div>
 </footer>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
