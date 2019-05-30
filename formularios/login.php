@@ -1,5 +1,6 @@
 
 <div class="container">
+    <h1 id="htitulo">Iniciar Sesión</h1>
     <form action="./clases.php?login" method="post">
         <div class="form-group">
             <label for="exampleInputEmail1">Email</label>
@@ -12,7 +13,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Login</button>
-        <a  href="?menu=recuperarpass" >Recuperar contrase�a</a>
+        <a  href="?menu=recuperarpass" >Recuperar contraseña</a>
     </form>
 </div>
 

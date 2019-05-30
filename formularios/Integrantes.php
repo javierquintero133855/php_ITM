@@ -8,8 +8,8 @@
 	
 </head>
 <body>
-		
 
+<h1 id="htitulo">Integrantes del Equipo</h1>
 		<?php
 			include './clases.php';
         $query = new db();
@@ -28,6 +28,7 @@
 		<tr>
 			<td colspan="6" rowspan="7">Foto</td>
 			<td colspan="6" class="table-dark">Nombres y apellido</td>
+            <td colspan="6"><?php echo $fila["nombres"]." ".$fila["apellidos"];?></td>
 		</tr>
 		<tr>
 			<td colspan="6"><?php echo $fila["idequipo"];?></td>

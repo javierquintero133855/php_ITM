@@ -8,7 +8,7 @@
 	
 </head>
 <body>
-		
+		<h1 id="htitulo">Perfil del Equipo</h1>
 
 		<?php
 			include './clases.php';

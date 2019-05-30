@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <h1>Formulario de Contacto</h1>
+                <h1 id="htitulo">Formulario de Contacto</h1>
 
                 <form action="./clases.php?contactar" method="post">
                     <div class="form-row">

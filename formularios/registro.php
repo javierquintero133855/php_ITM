@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <h1>Formulario de registro</h1>
+                <h1 id="htitulo">Formulario de registro</h1>
                 <form action="./clases.php?registrar" method="post">
                     <div class="form-row">
                         <div class="form-group col-md-6">
