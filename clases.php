@@ -1,4 +1,8 @@
 <?php
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 /**
  * Archivo para la creación de todas las clases de nuestro Web Site
  */
@@ -44,14 +48,14 @@ function login()
         $res = $result;
         if ($result) {
             $fila = $result->fetch_assoc();
-                 session_start();
-                 $_SESSION['usuario'] = $fila['email'];
+            session_start();
+            $_SESSION['usuario'] = $fila['email'];
             $response = ($result->num_rows > 0) ? $result->fetch_array(MYSQLI_ASSOC) : "error";
             if ($response != "error") {
                 // llenar sesion y redirect a index.php
                 $query->db_sql("update usuarios set acceso = '1', fecha='$fecha' where email  = '$email' AND password = '$password'");
                 $mensaje = "Bienvenido " . $_SESSION['usuario'];
-               // $mensaje = "Bienvenido " . $response["nombre1"] . " " . $response["apellido1"];
+                // $mensaje = "Bienvenido " . $response["nombre1"] . " " . $response["apellido1"];
                 $path = "http://localhost:81/2_actividad/index.php";
                 echo "<script type='text/javascript'>alert('$mensaje');</script>";
                 echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
@@ -61,7 +65,7 @@ function login()
 
                 // llenar sesion error con un mensaje
 
-                $mensaje = "!!!Error usuario no encontrado";
+                $mensaje = "!!!Error usuario no encontrado,  se redireccionará al formulario de registro";
                 echo "<script type='text/javascript'>alert('$mensaje');</script>";
                 $path = "http://localhost:81/2_actividad/index.php?menu=registro";
                 echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
@@ -81,11 +85,11 @@ function cambiopassword()
 
         session_start();
         $email = $_SESSION['usuario'];
-         
+
         $password = $_POST['password'];
-        
+
         $newpass = $_POST['newpassword'];
-      
+
 
         $query = new db();
         $result = $query->db_sql("select * from usuarios where email  = '$email' AND password = '$password'");
@@ -93,7 +97,7 @@ function cambiopassword()
             $response = ($result->num_rows > 0) ? $result->fetch_array(MYSQLI_ASSOC) : "error";
             if ($response != "error") {
                 // llenar sesion y redirect a index.php
-              $query->db_sql("update usuarios set password = '$newpass' where email  = '$email' AND password = '$password'");
+                $query->db_sql("update usuarios set password = '$newpass' where email  = '$email' AND password = '$password'");
 
                 $mensaje = "Contraseña cambiada con éxito ";
                 $path = "http://localhost:81/2_actividad/index.php";
@@ -102,21 +106,21 @@ function cambiopassword()
 
 
             } else {
-            // llenar sesion error con un mensaje
+                // llenar sesion error con un mensaje
 
                 $mensaje = "!!!Error contraseña incorrecta";
                 echo "<script type='text/javascript'>alert('$mensaje');</script>";
                 $path = "http://localhost:81/2_actividad/index.php?menu=registro";
                 echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
 
-        } 
-        die;
-    }else{
-         print_r("!!!Error");
+            }
+            die;
+        } else {
+            print_r("!!!Error");
+        }
+    } else {
+        print_r("!!!Error");
     }
-}else{
-     print_r("!!!Error");
-}
 }
 
 //metodo para completar registro
@@ -129,7 +133,7 @@ function completarregistro()
         $edad = $_POST['edad'];
         $sexo = $_POST['sexo'];
         $profesion = $_POST['profesion'];
-      
+
 
         $query = new db();
         $result = $query->db_sql("select * from usuarios where email  = '$email'");
@@ -137,7 +141,7 @@ function completarregistro()
             $response = ($result->num_rows > 0) ? $result->fetch_array(MYSQLI_ASSOC) : "error";
             if ($response != "error") {
                 // llenar sesion y redirect a index.php
-              $query->db_sql("update usuarios set edad = '$edad', sexo='$sexo', profesion='$profesion' where email  = '$email'");
+                $query->db_sql("update usuarios set edad = '$edad', sexo='$sexo', profesion='$profesion' where email  = '$email'");
 
                 $mensaje = "El registro ha sido completado exitosamente";
                 $path = "http://localhost:81/2_actividad/index.php";
@@ -146,74 +150,73 @@ function completarregistro()
 
 
             } else {
-            // llenar sesion error con un mensaje
+                // llenar sesion error con un mensaje
 
                 $mensaje = "!!!Ha ocurrido un error al intentar completar en registro";
                 echo "<script type='text/javascript'>alert('$mensaje');</script>";
                 $path = "http://localhost:81/2_actividad/index.php?menu=registro";
                 echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
 
-        } 
-        die;
-    }else{
-         print_r("!!!Error");
+            }
+            die;
+        } else {
+            print_r("!!!Error");
+        }
+    } else {
+        print_r("!!!Error");
     }
-}else{
-     print_r("!!!Error");
-}
 }
 
 //metodo para recuperar contraseña
 function recuperarpass()
 {
     if (isset($_POST)) {
-         
+
         $email = $_POST['email'];
 
         $query = new db();
         $result = $query->db_sql("select password from usuarios where email  = '$email'");
         if ($result) {
             $fila = $result->fetch_assoc();
-               
-                 $pass = $fila['password'];
+
+            $pass = $fila['password'];
             $response = ($result->num_rows > 0) ? $result->fetch_array(MYSQLI_ASSOC) : "error";
             if ($response != "error") {
                 // llenar sesion y redirect a index.php
-             $to = $email;
-            $subject = "Recuperación de contraseña sitio web PHPStudents PPI620303";
-            $message = "Su clave es: ".$pass;
-            $headers = "From: PhpStudents " ;
-            $bool=mail($to, $subject, $message,$headers);
-                if($bool){
-                     $mensaje = "La contraseña ha sido enviada a su correo electronico ";
-                $path = "http://localhost:81/2_actividad/index.php";
-                echo "<script type='text/javascript'>alert('$mensaje');</script>";
-                echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
-                }else{
-                     $mensaje = "ha ocurrido un error al enviadar correo electronico ";
-                $path = "http://localhost:81/2_actividad/index.php";
-                echo "<script type='text/javascript'>alert('$mensaje');</script>";
-                echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
+                $to = $email;
+                $subject = "Recuperación de contraseña sitio web PHPStudents PPI620303";
+                $message = "Su clave es: " . $pass;
+                $headers = "From: PhpStudents ";
+                $bool = mail($to, $subject, $message, $headers);
+                if ($bool) {
+                    $mensaje = "La contraseña ha sido enviada a su correo electronico ";
+                    $path = "http://localhost:81/2_actividad/index.php";
+                    echo "<script type='text/javascript'>alert('$mensaje');</script>";
+                    echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
+                } else {
+                    $mensaje = "ha ocurrido un error al enviadar correo electronico ";
+                    $path = "http://localhost:81/2_actividad/index.php";
+                    echo "<script type='text/javascript'>alert('$mensaje');</script>";
+                    echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
                 }
-               
 
 
             } else {
-            // llenar sesion error con un mensaje
+                // llenar sesion error con un mensaje
 
                 $mensaje = "!!!Error email no registrado";
                 echo "<script type='text/javascript'>alert('$mensaje');</script>";
                 $path = "http://localhost:81/2_actividad/index.php?menu=registro";
                 echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
 
-        } 
-        die;
-    }else{
-         print_r("!!!Error");
+            }
+            die;
+        } else {
+            print_r("!!!Error");
+        }
+    } else {
+        print_r("!!!Error");
     }
-}else{
-     print_r("!!!Error");
-}
 }
 
 // metodo para Registrar
@@ -231,6 +234,8 @@ function registrar()
         $fecha_reg = date("Y-m-d H:i:s");
         $state = 0;
         $fecha = date("Y-m-d H:i:s");
+        $asunto = "Registro satisfactorio, Gracias por registrarse";
+        $mensaje = "gdfgdf";
 
         $query = new db();
 
@@ -239,16 +244,23 @@ function registrar()
 
         if ($response) {
 
-            print_r("Usuario Registrado");
+            $clsmail = new SendMail();
+            $clsmail->Enviar($mail, $asunto, $mensaje);
+            $mensaje = "!Usuario Registrado !";
+            $path = "http://localhost:81/2_actividad/index.php?menu=ingreso";
 
+            echo "<script type='text/javascript'>alert('$mensaje');</script>";
+            echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
 
         } else {
-            //print_r("else primer if");
-            $mensaje = "!Error faltan datos !";
-            $path = "http://localhost:81/2_actividad/index.php?menu=registro";
+
+            $mensaje = "!El usuario $mail, ya está registrado, se redireccionrá al login !";
+            $path = "http://localhost:81/2_actividad/index.php?menu=ingreso";
             echo "<script type='text/javascript'>alert('$mensaje');</script>";
             echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
         }
+
+
         die;
 
 
@@ -284,14 +296,14 @@ function contactar()
                 $mensaje = "!!!Error";
                 echo "<script type='text/javascript'>alert('$mensaje');</script>";
             }
-        }else{
+        } else {
             //print_r("else primer if");
             $mensaje = "!Error faltan datos !";
             $path = "http://localhost:81/2_actividad/index.php?menu=registro";
             echo "<script type='text/javascript'>alert('$mensaje');</script>";
             echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
         }
-       die;
+        die;
 
     }
 
@@ -337,15 +349,59 @@ class db
         return $this->result;
     }
 
-    function salir(){
+    function salir()
+    {
         session_destroy();
-         $path = "http://localhost:81/2_actividad/index.php?menu=registro";
-            echo "<script type='text/javascript'>alert('$mensaje');</script>";
-            echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
+        $path = "http://localhost:81/2_actividad/index.php?menu=registro";
+        echo "<script type='text/javascript'>alert('$mensaje');</script>";
+        echo "<script>setTimeout(\"location.href = '$path';\",1500);</script>";
 
     }
 
 
 }
 
-?>
+
+class SendMail
+{
+
+    function Enviar()
+    {
+
+        require './mailer/src/Exception.php';
+        require './mailer/src/PHPMailer.php';
+        require './mailer/src/SMTP.php';
+        $mail = new PHPMailer(true);
+
+        try {
+
+            $mail->SMTPDebug = 0;
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'javierquinterog1216@gmail.com';
+            $mail->Password = 'N0m3l4s3*';
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 587;
+
+            //Recipients
+            $mail->setFrom('javierquinterog1216@gmail.com', 'Mailer');
+            $mail->addAddress('joe@example.net', 'Joe User');
+
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Here is the subject';
+            $mail->Body = 'This is the HTML message body <b>in bold!</b>';
+
+            $mail->send();
+            echo ' por favor confirmar su registro a travez del email enviado a su cuenta de correo';
+        } catch (Exception $e) {
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        }
+    }
+
+}
+
+
+
+
